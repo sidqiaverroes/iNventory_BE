@@ -1,7 +1,7 @@
-#This is a Simple Inventory Management Web Application
+# This is a Simple Inventory Management Web Application
 
 
-#Team Member
+# Team Member
 Ariq
 
 Diva
