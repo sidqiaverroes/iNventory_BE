@@ -1,0 +1,31 @@
+### get all
+
+GET http://localhost:3000/inventaris 
+
+### get one
+
+GET http://localhost:3000/inventaris/632d497ff7ea7f445e31146b
+
+###
+
+POST http://localhost:3000/inventaris
+Content-Type: application/json
+
+{
+    "title": "Barang",
+    "user_id": "1",
+    "item_id": "2"
+}
+
+### 
+
+DELETE http://localhost:3000/inventaris/632d3837f7ea7f445e311447
+
+###
+
+PATCH http://localhost:3000/inventaris/632d497ff7ea7f445e31146b
+Content-Type: application/json
+
+{
+    "title": "apalah"
+}

@@ -1,17 +1,13 @@
-require('dotenv').config()
+require("dotenv").config();
+const express = require("express");
+const app = express();
+const connectDB = require("./config/database");
+const inventarisRouter = require("./routes/inventaris");
 
-const express = require('express')
-const app = express()
-const mongoose = require('mongoose')
+connectDB();
 
-mongoose.connect(process.env.DATABASE_URL, {useNewUrlParser: true})
-const db = mongoose.connection
-db.on('error', (error) => console.error(error))
-db.once('open', () => console.log('connected to database'))
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use("/inventaris", inventarisRouter);
 
-app.use(express.json())
-
-const inventarisRouter = require('./routes/inventaris')
-app.use('/inventaris', inventarisRouter)
-
-app.listen(3000, ()=> console.log('server started'))
+app.listen(process.env.PORT, () => console.log("Server started"));
