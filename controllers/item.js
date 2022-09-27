@@ -15,3 +15,19 @@ const deleteItemController = async (req, res) => {
       res.status(500).json({ message: err.message });
     }
   };
+
+  const postItemController = async (req, res) => {
+    try {
+      const item = new Item({
+        name: req.body.name,
+        category: req.body.category,
+        qty: req.body.qty,
+        inventory_id: req.body.inventory_id,
+      });
+      const newItem = await item.save();
+      console.log(newItem);
+      res.status(201).send("Created new item successfully");
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
+  };
