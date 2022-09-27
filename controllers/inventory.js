@@ -30,3 +30,20 @@ const postInventoryController = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+//Update inventory
+const patchInventoryController = async (req, res) => {
+  try {
+    const filter = { _id: req.params.id };
+    const update = req.body;
+    console.log(req.body);
+
+    let updated = await Inventory.findOneAndUpdate(filter, update, {
+      new: true,
+    });
+    console.log(updated);
+    res.send("Successfully updated inventory");
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
