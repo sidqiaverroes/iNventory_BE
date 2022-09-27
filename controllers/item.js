@@ -16,7 +16,7 @@ const deleteItemController = async (req, res) => {
     }
   };
 
-  const postItemController = async (req, res) => {
+ const postItemController = async (req, res) => {
     try {
       const item = new Item({
         name: req.body.name,
@@ -29,5 +29,31 @@ const deleteItemController = async (req, res) => {
       res.status(201).send("Created new item successfully");
     } catch (error) {
       res.status(400).json({ message: error.message });
+    }
+  };
+
+  const patchItemController = async (req, res) => {
+    try {
+      const filter = { _id: req.params.id };
+      const update = {};
+      if (req.body.name != (null || "")) {
+        update.name = req.body.name;
+      }
+      if (req.body.category != (null || "")) {
+        update.category = req.body.category;
+      }
+      if (req.body.qty != (null || "")) {
+        update.qty = req.body.qty;
+      }
+      if (req.body.inventory_id != (null || "")) {
+        update.inventory_id = req.body.inventory_id;
+      }
+      console.log(update);
+  
+      let updated = await Item.findOneAndUpdate(filter, update, { new: true });
+      console.log(updated);
+      res.send("Item updated successfully.");
+    } catch (error) {
+      res.status(500).json({ message: error.message });
     }
   };
