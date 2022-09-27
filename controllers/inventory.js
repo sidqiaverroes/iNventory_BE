@@ -15,3 +15,18 @@ const deleteInventoryController = async (req, res) => {
       res.status(500).json({ message: err.message });
     }
   };
+
+  //Create new inventory
+const postInventoryController = async (req, res) => {
+  const inventory = new Inventory({
+    title: req.body.title,
+    user_id: req.body.user_id,
+  });
+  try {
+    const newInventory = await inventory.save();
+    console.log(newInventory);
+    return res.status(201).send("Created new inventory successfully.");
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
