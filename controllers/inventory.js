@@ -1,4 +1,5 @@
 const Inventory = require("../models/inventories");
+// const paginatedResults = require("../middleware/index");
 
 //get all inventory and filtering
 const getInventoryController = async (req, res) => {
@@ -22,7 +23,7 @@ const getInventoryController = async (req, res) => {
 };
 
 //get single inventory
-const getSingleInventoryController = async (req, res) => {
+const getInventoryByIdController = async (req, res) => {
   let inventory;
   try {
     inventory = await Inventory.findById(req.params.id);
@@ -52,22 +53,6 @@ const postInventoryController = async (req, res) => {
   }
 };
 
-//Delete single inventory
-const deleteInventoryController = async (req, res) => {
-  try {
-    const invDel = await Inventory.findById(req.params.id);
-    if (invDel == null) {
-      return res.status(404).json({ message: "Cannot find inventory" });
-    }
-    await invDel.remove();
-    return res
-      .status(200)
-      .json({ message: "Sucessfully Deleted inventory: " + invDel.title });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
 //Update inventory
 const patchInventoryController = async (req, res) => {
   try {
@@ -85,10 +70,78 @@ const patchInventoryController = async (req, res) => {
   }
 };
 
+//Delete single inventory
+const deleteInventoryController = async (req, res) => {
+  try {
+    const invDel = await Inventory.findById(req.params.id);
+    if (invDel == null) {
+      return res.status(404).json({ message: "Cannot find inventory" });
+    }
+    await invDel.remove();
+    return res
+      .status(200)
+      .json({ message: "Sucessfully Deleted inventory: " + invDel.title });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+//Get all paginated
+const getInventoryPaginatedController = async (req, res) => {
+  const page = parseInt(req.query.page);
+  const limit = parseInt(req.query.limit);
+
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
+
+  const results = {};
+
+  if (endIndex < (await Inventory.countDocuments().exec())) {
+    results.next = {
+      page: page + 1,
+      limit: limit,
+    };
+  }
+
+  if (startIndex > 0) {
+    results.previous = {
+      page: page - 1,
+      limit: limit,
+    };
+  }
+
+  try {
+    let sortBy = {};
+    if (req.query.sort)
+      results.results = await Inventory.find()
+        .limit(limit)
+        .skip(startIndex)
+        .sort({ title: 1 })
+        .exec();
+    res.paginatedResults = results;
+    console.log(results);
+    res.json(results);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+//Delete all inventories
+// const deleteAllInventoriesController = (req, res) => {
+//   Inventory.deleteMany((err) => {
+//     if (!err) {
+//       res.send("Sucessfully deleted all inventories.");
+//     } else {
+//       res.send(err);
+//     }
+//   });
+// };
+
 module.exports = {
   getInventoryController,
-  getSingleInventoryController,
   postInventoryController,
-  deleteInventoryController,
+  getInventoryByIdController,
   patchInventoryController,
+  deleteInventoryController,
+  getInventoryPaginatedController,
 };
