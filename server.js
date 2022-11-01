@@ -26,6 +26,9 @@ app.use(cors());
 app.use("/api/auth", userRoute);
 app.use("/inv", inventoryRoute);
 app.use("/item", itemRoute);
+app.use("/", (req, res) => {
+  res.send("Welcome to Mynventory");
+});
 
 //error middleware
 app.use(errorHandler);

@@ -1,11 +1,13 @@
 const User = require("../models/users");
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 };
 
+//Register
 const registerController = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
 
@@ -62,25 +64,83 @@ const registerController = asyncHandler(async (req, res) => {
 });
 
 //Login
-// check username exist or not
-// if exist then check password is match with the corresponding email
-// if match login
-const loginController = async (req, res) => {
-  try {
-    const user = await User.findOne({ username: req.body.username });
-    if (user == null) {
-      return res.send("username not registered");
-    } else {
-      if (req.body.password != user.password) {
-        return res.send("password incorrect");
-      } else {
-        return res.send("login successfully");
-      }
-    }
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+const loginController = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  //Validate request
+  if (!email || !password) {
+    res.status(400);
+    throw new Error("Please enter email and password.");
   }
-};
+
+  //Check if user exist
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    res.status(400);
+    throw new Error("User not found, please signup.");
+  }
+
+  //User exist, check password is correct
+  const passwordIsCorrect = await bcrypt.compare(password, user.password);
+
+  //Generate token
+  const token = generateToken(user._id);
+
+  //Send HTTP-only cookie
+  res.cookie("token", token, {
+    path: "/",
+    httpOnly: true,
+    expires: new Date(Date.now() + 1000 * 86400), // 1 day
+    sameSite: "none",
+    secure: true,
+  });
+
+  if (user && passwordIsCorrect) {
+    const { _id, username, email, photo, bio } = user;
+    res.status(200).json({
+      _id,
+      username,
+      email,
+      photo,
+      bio,
+    });
+  } else {
+    res.status(400);
+    throw new Error("Invalid email or password.");
+  }
+});
+
+//Logout
+const logoutController = asyncHandler(async (req, res) => {
+  res.cookie("token", "", {
+    path: "/",
+    httpOnly: true,
+    expires: new Date(0),
+    sameSite: "none",
+    secure: true,
+  });
+  return res.status(200).json({ message: "Successfully logged out." });
+});
+
+//Get user
+const getUser = asyncHandler(async (req, res) => {
+  const user = User.findById(req.user._id);
+
+  if (user && passwordIsCorrect) {
+    const { _id, username, email, photo, bio } = user;
+    res.status(200).json({
+      _id,
+      username,
+      email,
+      photo,
+      bio,
+    });
+  } else {
+    res.status(400);
+    throw new Error("User not found.");
+  }
+});
 
 //get all users data
 const userList = (req, res) => {
@@ -89,4 +149,10 @@ const userList = (req, res) => {
   });
 };
 
-module.exports = { registerController, loginController, userList };
+module.exports = {
+  registerController,
+  loginController,
+  userList,
+  logoutController,
+  getUser,
+};
