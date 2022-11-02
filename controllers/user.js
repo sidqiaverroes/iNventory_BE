@@ -44,7 +44,6 @@ const registerController = asyncHandler(async (req, res) => {
     httpOnly: true,
     expires: new Date(Date.now() + 1000 * 86400), // 1 day
     sameSite: "none",
-    secure: true,
   });
 
   if (newUser) {
@@ -93,7 +92,6 @@ const loginController = asyncHandler(async (req, res) => {
     httpOnly: true,
     expires: new Date(Date.now() + 1000 * 86400), // 1 day
     sameSite: "none",
-    secure: true,
   });
 
   if (user && passwordIsCorrect) {
@@ -118,16 +116,15 @@ const logoutController = asyncHandler(async (req, res) => {
     httpOnly: true,
     expires: new Date(0),
     sameSite: "none",
-    secure: true,
   });
   return res.status(200).json({ message: "Successfully logged out." });
 });
 
 //Get user
 const getUser = asyncHandler(async (req, res) => {
-  const user = User.findById(req.user._id);
+  const user = await User.findById(req.user._id);
 
-  if (user && passwordIsCorrect) {
+  if (user) {
     const { _id, username, email, photo, bio } = user;
     res.status(200).json({
       _id,

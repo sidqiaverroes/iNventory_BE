@@ -1,5 +1,6 @@
 <a name="readme-top"></a>
 <br />
+
 <div align="center">
    <img src="https://cdn-icons-png.flaticon.com/512/7656/7656411.png" alt="Logo" width="80" height="80">
 
@@ -31,12 +32,11 @@
 
 This the backend side of the full project that is intended to fullfill the task of Web Application Development subject. iNventory is an inventory management web app for people that need a tool to monitor their product stocks so their business' or store's buy and sell activity can be tracked and stay organized.
 
-
 ### Built With
 
-[![Node][Node.js]][Node-url]
-[![Express][Express.js]][Express-url]
-[![Mongodb][Mongo.db]][Mongo-url]
+[![Node][node.js]][node-url]
+[![Express][express.js]][express-url]
+[![Mongodb][mongo.db]][mongo-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -48,24 +48,25 @@ This is how to set up the projects in your local.
    ```sh
    git clone https://github.com/sidqiaverroes/paw_inventaris.git
    ```
-3. Install NPM packages
+2. Install NPM packages
    ```sh
-   npm install bcryptjs body-parser cookie-parser cors dotenv express express-async-handler jsonwebtoken mongoose nodemon  
+   npm install bcryptjs body-parser cookie-parser cors dotenv express express-async-handler jsonwebtoken mongoose nodemon
    ```
-4. Change `.env.example` file to `.env` and fill up the fields.
+3. Change `.env.example` file to `.env` and fill up the fields.
    ```sh
    DATABASE_URL = (your mongodb database url)
    PORT = (your port)
    NODE_ENV = development
    JWT_SECRET = (your jwt secret, can be anything such as 'TEST123')
    ```
-5. Run the program
+4. Run the program
    ```sh
    npm run dev
    ```
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+   <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
+
 ## Contributing
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request.
@@ -81,21 +82,22 @@ Don't forget to give the project a star! Thanks!
 
 ## Team Member
 
-Name | NIM
---- | ---
-Ariq Tsaqif Aryasuta | 20/460541/TK/51130
-Azzahra Adine Divania | 20/463595/TK/51587
-Miftahul Jannah | 20/456845/TK/50669
-M Naufal Fadlurrahman | 20/456847/TK/50671
-Sidqi Averroes | 20/460568/TK/51157
+| Name                  | NIM                |
+| --------------------- | ------------------ |
+| Ariq Tsaqif Aryasuta  | 20/460541/TK/51130 |
+| Azzahra Adine Divania | 20/463595/TK/51587 |
+| Miftahul Jannah       | 20/456845/TK/50669 |
+| M Naufal Fadlurrahman | 20/456847/TK/50671 |
+| Sidqi Averroes        | 20/460568/TK/51157 |
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[Node.js]: https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white
-[Node-url]: https://nodejs.org/en/
-[Express.js]: https://img.shields.io/badge/Express.js-404D59?style=for-the-badge
-[Express-url]: https://expressjs.com/
-[Mongo.db]: https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white
-[Mongo-url]: https://www.mongodb.com/
+
+[node.js]: https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white
+[node-url]: https://nodejs.org/en/
+[express.js]: https://img.shields.io/badge/Express.js-404D59?style=for-the-badge
+[express-url]: https://expressjs.com/
+[mongo.db]: https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white
+[mongo-url]: https://www.mongodb.com/

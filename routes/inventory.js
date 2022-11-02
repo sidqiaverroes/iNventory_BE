@@ -10,6 +10,8 @@ const {
   getInventoryPaginatedController,
 } = require("../controllers/inventory");
 
+const { protectUser } = require("../middleware/index");
+
 // // //getting all & filter
 // router.get("/", getInventoryController);
 
@@ -17,7 +19,7 @@ const {
 router.get("/:id", getInventoryByIdController);
 
 //creating one
-router.post("/", postInventoryController);
+router.post("/:id", protectUser, postInventoryController);
 
 //updating one
 router.patch("/:id", patchInventoryController);
@@ -26,6 +28,6 @@ router.patch("/:id", patchInventoryController);
 router.delete("/:id", deleteInventoryController);
 
 //get all paginated
-router.get("/", getInventoryPaginatedController);
+router.get("/", protectUser, getInventoryPaginatedController);
 
 module.exports = router;

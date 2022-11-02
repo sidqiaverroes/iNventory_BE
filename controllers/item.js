@@ -1,4 +1,6 @@
 const Item = require("../models/items");
+const Inventory = require("../models/inventories");
+const asyncHandler = require("express-async-handler");
 
 const getAllItemController = async (req, res) => {
   try {
@@ -32,13 +34,13 @@ const getSingleItemController = async (req, res) => {
   }
 };
 
-const postItemController = async (req, res) => {
+const postItemController = asyncHandler(async (req, res) => {
   try {
     const item = new Item({
       name: req.body.name,
       category: req.body.category,
       qty: req.body.qty,
-      inventory_id: req.body.inventory_id,
+      inventory_id: req.params.id,
     });
     const newItem = await item.save();
     console.log(newItem);
@@ -46,7 +48,7 @@ const postItemController = async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
-};
+});
 
 const patchItemController = async (req, res) => {
   try {
@@ -89,36 +91,37 @@ const deleteItemController = async (req, res) => {
   }
 };
 
-const getItemsController = async (req, res) => {
+const getItemsController = asyncHandler(async (req, res) => {
   try {
     const page = parseInt(req.query.page) - 1 || 0;
     const limit = parseInt(req.query.limit) || 5;
     const search = req.query.search || "";
-    let sort = req.query.sort;
+    let sort = req.query.sort || 1;
     // let category = req.query.category || "ALL"
 
     let sortBy = {};
-    if (sort[1]) {
-      sortBy[sort[0]] = sort[1];
+    if (sort == 1) {
+      sortBy = { title: 1 };
     } else {
-      sortBy[sort[0]] = "asc";
+      sortBy = { title: -1 };
     }
 
     const items = await Item.find({
       name: { $regex: search, $options: "i" },
+      inventory_id: req.params.id,
     })
       .sort(sortBy)
       .skip(page * limit)
       .limit(limit);
 
-    const total = await items.countDocuments({});
+    const total = await Item.countDocuments({ inventory_id: req.params.id });
 
     const response = {
       error: false,
       total,
       page: page + 1,
       limit,
-      itmes,
+      items,
     };
 
     res.status(200).json(response);
@@ -126,7 +129,7 @@ const getItemsController = async (req, res) => {
     console.log(error);
     res.status(500).json({ message: error.message });
   }
-};
+});
 
 module.exports = {
   getAllItemController,

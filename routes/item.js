@@ -7,21 +7,24 @@ const {
   postItemController,
   patchItemController,
   deleteItemController,
+  getItemsController,
 } = require("../controllers/item");
 
 //get all items
-router.get("/", getAllItemController);
+// router.get("/", getAllItemController);
 
 //get items by id
-router.get("/:id", getSingleItemController);
+router.get("/details/:id", getSingleItemController);
 
 //create new item
-router.post("/", postItemController);
+router.post("/:id", postItemController);
 
 //update item
 router.patch("/:id", patchItemController);
 
 //delete item
 router.delete("/:id", deleteItemController);
+
+router.get("/:id", getItemsController);
 
 module.exports = router;
