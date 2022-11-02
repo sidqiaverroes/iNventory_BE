@@ -10,12 +10,17 @@ const itemSchema = new mongoose.Schema({
     type: String,
   },
 
+  price: {
+    type: String,
+  },
+
   qty: {
     type: Number,
   },
 
   inventory_id: {
     type: String,
+    required: true,
   },
 });
 

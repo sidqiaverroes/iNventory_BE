@@ -12,7 +12,7 @@ const protectUser = asyncHandler(async (req, res, next) => {
 
     //Verify token
     const verified = jwt.verify(token, process.env.JWT_SECRET);
-    //Get user data by id from token without password
+    //Get user data by id from token excluding the password fields
     let user = await User.findById(verified.id).select("-password");
 
     if (!user) {
