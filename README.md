@@ -50,15 +50,23 @@ This is how to set up the projects in your local.
    ```
 2. Install NPM packages
    ```sh
-   npm install bcryptjs body-parser cookie-parser cors dotenv express express-async-handler jsonwebtoken mongoose nodemon
+   npm install bcryptjs body-parser cookie-parser cors dotenv express express-async-handler jsonwebtoken mongoose nodemailer nodemon
    ```
 3. Change `.env.example` file to `.env` and fill up the fields.
+
    ```sh
    DATABASE_URL = (your mongodb database url)
    PORT = (your port)
    NODE_ENV = development
-   JWT_SECRET = (your jwt secret, can be anything such as 'TEST123')
+   JWT_SECRET = (your jwt secret, can be anything, example: TEST123)
+
+   EMAIL_HOST = (your email host, example: smtp-mail.outlook.com)
+   EMAIL_USER = (your email created from your email host, example: paw10patrol@outlook.com)
+   EMAIL_PASS = (your email password)
+
+   FRONTEND_URL = (your frontend url, example: http://localhost:3000)
    ```
+
 4. Run the program
    ```sh
    npm run dev

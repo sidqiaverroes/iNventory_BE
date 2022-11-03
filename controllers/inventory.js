@@ -125,8 +125,6 @@ const getInventoryPaginatedController = async (req, res) => {
       .skip(page * limit)
       .limit(limit);
 
-    console.log(inventories);
-
     const total = await Inventory.countDocuments({ user_id: req.user._id });
 
     const response = {
