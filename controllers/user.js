@@ -139,6 +139,76 @@ const getUser = asyncHandler(async (req, res) => {
   }
 });
 
+//update user
+const updateUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    const { username, email, photo, bio } = user;
+    user.email = email;
+    user.username = req.body.username || username;
+    user.photo = req.body.photo || photo;
+    user.bio = req.body.bio || bio;
+
+    const updatedUser = await user.save();
+    res.status(200).json({
+      username: updatedUser.username,
+      email: updatedUser.email,
+      photo: updatedUser.photo,
+      bio: updatedUser.bio,
+    });
+  } else {
+    res.status(400);
+    throw new Error("User not found.");
+  }
+});
+
+//Change password
+const changePassowrd = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    res.status(400);
+    throw new Error("User not found, please sign up.");
+  }
+
+  const { oldPassword, newPassword } = req.body;
+  //Validate
+  if (!oldPassword || !newPassword) {
+    res.status(400);
+    throw new Error("Please enter old and new Password.");
+  }
+
+  //Check if old password matches password in db
+  const passwordIsMatch = await bcrypt.compare(oldPassword, user.password);
+
+  //Save new password
+  if (user && passwordIsMatch) {
+    user.password = newPassword;
+    await user.save();
+    res.status(200).send("Password changed successfully.");
+  } else {
+    res.status(400);
+    throw new Error("Old password is incorrect.");
+  }
+});
+
+//Get user login status
+const loginStatus = asyncHandler(async (req, res) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.json(false);
+  }
+
+  //Verify token
+  const verified = jwt.verify(token, process.env.JWT_SECRET);
+  if (verified) {
+    return res.json(true);
+  } else {
+    return res.json(false);
+  }
+});
+
 //get all users data
 const userList = (req, res) => {
   User.find((err, users) => {
@@ -151,5 +221,8 @@ module.exports = {
   loginController,
   userList,
   logoutController,
+  updateUser,
   getUser,
+  changePassowrd,
+  loginStatus,
 };
