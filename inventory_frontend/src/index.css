@@ -46,6 +46,10 @@
   );
 }
 
+.bg-red-button{ 
+  background: rgba(242, 46, 87, 1)
+}
+
 .bg-black-gradient {
   background: linear-gradient(
     144.39deg,
@@ -53,6 +57,18 @@
     #6d6d6d -78.47%,
     #11101d 91.61%
   );
+}
+
+.tab{
+  tab-size: 4;
+}
+
+.bg-blue-gradient{
+  background: linear-gradient(
+    153.47deg,
+    rgba(13, 35, 80, 1) -341.94%,
+    rgba(24, 72, 180, 1) 95.11%
+  )
 }
 
 .bg-black-gradient-2 {
