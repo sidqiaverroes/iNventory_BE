@@ -1,15 +1,12 @@
-require("dotenv").config();
-
-const cors = require("cors");
-const bodyParser = require("body-parser");
-
+const dotenv = require("dotenv").config();
 const express = require("express");
-const app = express();
-const connectDB = require("./config/database");
-const inventoryRoute = require("./routes/inventory");
-const userRoute = require("./routes/user");
-const itemRoute = require("./routes/item");
-const { errorHandler } = require("./middleware/index");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const userRoute = require("./routes/userRoute");
+const productRoute = require("./routes/productRoute");
+const contactRoute = require("./routes/contactRoute");
+const errorHandler = require("./middleWare/errorMiddleware");
 const cookieParser = require("cookie-parser");
 
 //Connect to Database
