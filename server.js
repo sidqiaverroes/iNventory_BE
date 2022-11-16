@@ -4,39 +4,46 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const userRoute = require("./routes/userRoute");
-const productRoute = require("./routes/productRoute");
+const productRoute = require("./routes/itemRoute");
 const contactRoute = require("./routes/contactRoute");
 const errorHandler = require("./middleWare/errorMiddleware");
 const cookieParser = require("cookie-parser");
 
-//Connect to Database
-connectDB();
+const app = express();
 
-//Middlewares
+// Middlewares
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "https://pinvent-app.vercel.app"],
     credentials: true,
   })
 );
+
+// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes Middleware
 app.use("/api/users", userRoute);
 app.use("/api/products", productRoute);
 app.use("/api/contactus", contactRoute);
 
-//Routes
-app.use("/", (req, res) => {
-  res.send("Welcome to Mynventory");
+// Routes
+app.get("/", (req, res) => {
+  res.send("Home Page");
 });
 
-//error middleware
+// Error Middleware
 app.use(errorHandler);
-
-//start server
+// Connect to DB and start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server Running on port ${PORT}`);
+    });
+  })
+  .catch((err) => console.log(err));
