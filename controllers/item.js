@@ -1,141 +1,160 @@
-const Item = require("../models/items");
-const Inventory = require("../models/inventories");
 const asyncHandler = require("express-async-handler");
+const Product = require("../models/productModel");
+const { fileSizeFormatter } = require("../utils/fileUpload");
+const cloudinary = require("cloudinary").v2;
 
-const getAllItemController = async (req, res) => {
-  try {
-    const item = await Item.find();
-    const filters = req.query;
-    const filteredItem = item.filter((item) => {
-      // console.log(item);
-      let isValid = true;
-      for (key in filters) {
-        console.log(key, item[key], filters[key]);
-        isValid = isValid && item[key] == filters[key];
-      }
-      return isValid;
-    });
-    res.send(filteredItem);
-    // console.log(req.query);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+// Create Prouct
+const createProduct = asyncHandler(async (req, res) => {
+  const { name, sku, category, quantity, price, description } = req.body;
+
+  //   Validation
+  if (!name || !category || !quantity || !price || !description) {
+    res.status(400);
+    throw new Error("Please fill in all fields");
   }
-};
 
-const getSingleItemController = async (req, res) => {
-  try {
-    const item = await Item.findById(req.params.id);
-    if (item == null) {
-      return res.status(404).json({ message: "Cannot find item" });
+  // Handle Image upload
+  let fileData = {};
+  if (req.file) {
+    // Save image to cloudinary
+    let uploadedFile;
+    try {
+      uploadedFile = await cloudinary.uploader.upload(req.file.path, {
+        folder: "Pinvent App",
+        resource_type: "image",
+      });
+    } catch (error) {
+      res.status(500);
+      throw new Error("Image could not be uploaded");
     }
-    res.send(item);
-  } catch (err) {
-    return res.status(500).json({ message: err.message });
-  }
-};
 
-const postItemController = asyncHandler(async (req, res) => {
-  try {
-    const item = new Item({
-      name: req.body.name,
-      category: req.body.category,
-      qty: req.body.qty,
-      inventory_id: req.params.id,
-    });
-    const newItem = await item.save();
-    console.log(newItem);
-    res.status(201).send("Created new item successfully");
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+    fileData = {
+      fileName: req.file.originalname,
+      filePath: uploadedFile.secure_url,
+      fileType: req.file.mimetype,
+      fileSize: fileSizeFormatter(req.file.size, 2),
+    };
   }
+
+  // Create Product
+  const product = await Product.create({
+    user: req.user.id,
+    name,
+    sku,
+    category,
+    quantity,
+    price,
+    description,
+    image: fileData,
+  });
+
+  res.status(201).json(product);
 });
 
-const patchItemController = async (req, res) => {
-  try {
-    const filter = { _id: req.params.id };
-    const update = {};
-    if (req.body.name != (null || "")) {
-      update.name = req.body.name;
-    }
-    if (req.body.category != (null || "")) {
-      update.category = req.body.category;
-    }
-    if (req.body.qty != (null || "")) {
-      update.qty = req.body.qty;
-    }
-    if (req.body.inventory_id != (null || "")) {
-      update.inventory_id = req.body.inventory_id;
-    }
-    console.log(update);
+// Get all Products
+const getProducts = asyncHandler(async (req, res) => {
+  const products = await Product.find({ user: req.user.id }).sort("-createdAt");
+  res.status(200).json(products);
+});
 
-    let updated = await Item.findOneAndUpdate(filter, update, { new: true });
-    console.log(updated);
-    res.send("Item updated successfully.");
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+// Get single product
+const getProduct = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  // if product doesnt exist
+  if (!product) {
+    res.status(404);
+    throw new Error("Product not found");
   }
-};
-
-const deleteItemController = async (req, res) => {
-  try {
-    const itemDel = await Item.findById(req.params.id);
-    if (itemDel == null) {
-      return res.status(404).json({ message: "Cannot find item" });
-    }
-    await itemDel.remove();
-    return res
-      .status(200)
-      .json({ message: "Sucessfully Deleted item: " + itemDel.name });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+  // Match product to its user
+  if (product.user.toString() !== req.user.id) {
+    res.status(401);
+    throw new Error("User not authorized");
   }
-};
+  res.status(200).json(product);
+});
 
-const getItemsController = asyncHandler(async (req, res) => {
-  try {
-    const page = parseInt(req.query.page) - 1 || 0;
-    const limit = parseInt(req.query.limit) || 5;
-    const search = req.query.search || "";
-    let sort = req.query.sort || 1;
-    // let category = req.query.category || "ALL"
+// Delete Product
+const deleteProduct = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  // if product doesnt exist
+  if (!product) {
+    res.status(404);
+    throw new Error("Product not found");
+  }
+  // Match product to its user
+  if (product.user.toString() !== req.user.id) {
+    res.status(401);
+    throw new Error("User not authorized");
+  }
+  await product.remove();
+  res.status(200).json({ message: "Product deleted." });
+});
 
-    let sortBy = {};
-    if (sort == 1) {
-      sortBy = { title: 1 };
-    } else {
-      sortBy = { title: -1 };
+// Update Product
+const updateProduct = asyncHandler(async (req, res) => {
+  const { name, category, quantity, price, description } = req.body;
+  const { id } = req.params;
+
+  const product = await Product.findById(id);
+
+  // if product doesnt exist
+  if (!product) {
+    res.status(404);
+    throw new Error("Product not found");
+  }
+  // Match product to its user
+  if (product.user.toString() !== req.user.id) {
+    res.status(401);
+    throw new Error("User not authorized");
+  }
+
+  // Handle Image upload
+  let fileData = {};
+  if (req.file) {
+    // Save image to cloudinary
+    let uploadedFile;
+    try {
+      uploadedFile = await cloudinary.uploader.upload(req.file.path, {
+        folder: "Pinvent App",
+        resource_type: "image",
+      });
+    } catch (error) {
+      res.status(500);
+      throw new Error("Image could not be uploaded");
     }
 
-    const items = await Item.find({
-      name: { $regex: search, $options: "i" },
-      inventory_id: req.params.id,
-    })
-      .sort(sortBy)
-      .skip(page * limit)
-      .limit(limit);
-
-    const total = await Item.countDocuments({ inventory_id: req.params.id });
-
-    const response = {
-      error: false,
-      total,
-      page: page + 1,
-      limit,
-      items,
+    fileData = {
+      fileName: req.file.originalname,
+      filePath: uploadedFile.secure_url,
+      fileType: req.file.mimetype,
+      fileSize: fileSizeFormatter(req.file.size, 2),
     };
-
-    res.status(200).json(response);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: error.message });
   }
+
+  // Update Product
+  const updatedProduct = await Product.findByIdAndUpdate(
+    { _id: id },
+    {
+      name,
+      category,
+      quantity,
+      price,
+      description,
+      image: Object.keys(fileData).length === 0 ? product?.image : fileData,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res.status(200).json(updatedProduct);
 });
 
 module.exports = {
-  getAllItemController,
-  getSingleItemController,
-  postItemController,
-  patchItemController,
-  deleteItemController,
-  getItemsController,
+  createProduct,
+  getProducts,
+  getProduct,
+  deleteProduct,
+  updateProduct,
 };

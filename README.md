@@ -50,7 +50,7 @@ This is how to set up the projects in your local.
    ```
 2. Install NPM packages
    ```sh
-   npm install bcryptjs body-parser cookie-parser cors dotenv express express-async-handler jsonwebtoken mongoose nodemailer nodemon
+   npm install bcryptjs body-parser cookie-parser cors dotenv express express-async-handler jsonwebtoken mongoose multer nodemailer nodemon
    ```
 3. Change `.env.example` file to `.env` and fill up the fields.
 
