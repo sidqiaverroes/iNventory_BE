@@ -112,7 +112,7 @@ Don't forget to give the project a star! Thanks!
 
 ## LINK SLIDE PRESENTASI
  ```sh
-   slide ppt https://drive.google.com/drive/folders/1eXvxnTVU27m9j9rkaYk4-vHx65c4kn9t?usp=share_link
+   https://drive.google.com/drive/folders/1eXvxnTVU27m9j9rkaYk4-vHx65c4kn9t?usp=share_link
    ``` 
 
 ## LINK WEB APLIKASI
