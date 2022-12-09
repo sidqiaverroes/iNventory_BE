@@ -109,3 +109,14 @@ Don't forget to give the project a star! Thanks!
 [express-url]: https://expressjs.com/
 [mongo.db]: https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white
 [mongo-url]: https://www.mongodb.com/
+
+## LINK SLIDE PRESENTASI
+[slide ppt]: https://drive.google.com/drive/folders/1eXvxnTVU27m9j9rkaYk4-vHx65c4kn9t?usp=sharing
+
+## LINK WEB APLIKASI
+
+## LINK PENILAIAN KELOMPOK
+
+[penilaian kelompok]: https://docs.google.com/spreadsheets/d/1tMqtY5ZjAGyMaj7RTuwy_Bc1NXWZj_DXO3vyPC92bAQ/edit?usp=sharing
+
+
