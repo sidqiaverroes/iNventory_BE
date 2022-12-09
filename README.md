@@ -118,7 +118,10 @@ Don't forget to give the project a star! Thanks!
 ## LINK WEB APLIKASI
 
 ## LINK PENILAIAN KELOMPOK
+```sh
+   https://docs.google.com/spreadsheets/d/1tMqtY5ZjAGyMaj7RTuwy_Bc1NXWZj_DXO3vyPC92bAQ/edit?usp=sharing
+   ```
+ 
 
-[penilaian kelompok]: https://docs.google.com/spreadsheets/d/1tMqtY5ZjAGyMaj7RTuwy_Bc1NXWZj_DXO3vyPC92bAQ/edit?usp=sharing
 
 
