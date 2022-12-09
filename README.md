@@ -110,6 +110,10 @@ Don't forget to give the project a star! Thanks!
 [mongo.db]: https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white
 [mongo-url]: https://www.mongodb.com/
 
+## LINK GITHUB FE (FRONTEND)
+ ```sh
+   https://github.com/sidqiaverroes/iNventory_FE.git
+   ``` 
 ## LINK SLIDE PRESENTASI
  ```sh
    https://drive.google.com/drive/folders/1eXvxnTVU27m9j9rkaYk4-vHx65c4kn9t?usp=share_link
@@ -117,11 +121,13 @@ Don't forget to give the project a star! Thanks!
 
 ## LINK WEB APLIKASI
 
+```sh
+   https://inventory-fe.vercel.app/
+   ```
+
 ## LINK PENILAIAN KELOMPOK
 ```sh
    https://docs.google.com/spreadsheets/d/1tMqtY5ZjAGyMaj7RTuwy_Bc1NXWZj_DXO3vyPC92bAQ/edit?usp=sharing
    ```
  
-
-
 
