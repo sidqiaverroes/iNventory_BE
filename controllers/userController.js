@@ -235,7 +235,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
     await token.deleteOne();
   }
 
-  // Create Reset Token
+  // Create Reste Token
   let resetToken = crypto.randomBytes(32).toString("hex") + user._id;
   console.log(resetToken);
 
@@ -250,7 +250,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
     userId: user._id,
     token: hashedToken,
     createdAt: Date.now(),
-    expiresAt: Date.now() + 30 * (60 * 1000), // Thirty minutes
+    expiredAt: Date.now() + 30 * (60 * 1000), // Thirty minutes
   }).save();
 
   // Construct Reset Url
@@ -261,11 +261,9 @@ const forgotPassword = asyncHandler(async (req, res) => {
       <h2>Hello ${user.name}</h2>
       <p>Please use the url below to reset your password</p>  
       <p>This reset link is valid for only 30minutes.</p>
-
       <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
-
       <p>Regards...</p>
-      <p>IVT Team</p>
+      <p>Pinvent Team</p>
     `;
   const subject = "Password Reset Request";
   const send_to = user.email;
@@ -294,7 +292,7 @@ const resetPassword = asyncHandler(async (req, res) => {
   // fIND tOKEN in DB
   const userToken = await Token.findOne({
     token: hashedToken,
-    expiresAt: { $gt: Date.now() },
+    expiredAt: { $gt: Date.now() },
   });
 
   if (!userToken) {

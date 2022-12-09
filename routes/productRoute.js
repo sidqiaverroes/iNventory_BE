@@ -7,7 +7,7 @@ const {
   getProduct,
   deleteProduct,
   updateProduct,
-} = require("../controllers/item");
+} = require("../controllers/productController");
 const { upload } = require("../utils/fileUpload");
 
 router.post("/", protect, upload.single("image"), createProduct);
