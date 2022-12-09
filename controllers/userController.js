@@ -250,7 +250,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
     userId: user._id,
     token: hashedToken,
     createdAt: Date.now(),
-    expiresAt: Date.now() + 30 * (60 * 1000), // Thirty minutes
+    expiredAt: Date.now() + 30 * (60 * 1000), // Thirty minutes
   }).save();
 
   // Construct Reset Url
@@ -292,7 +292,7 @@ const resetPassword = asyncHandler(async (req, res) => {
   // fIND tOKEN in DB
   const userToken = await Token.findOne({
     token: hashedToken,
-    expiresAt: { $gt: Date.now() },
+    expiredAt: { $gt: Date.now() },
   });
 
   if (!userToken) {

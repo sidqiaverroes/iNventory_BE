@@ -4,9 +4,9 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const userRoute = require("./routes/userRoute");
-const productRoute = require("./routes/itemRoute");
+const productRoute = require("./routes/productRoute");
 const contactRoute = require("./routes/contactRoute");
-const errorHandler = require("./middleWare/errorMiddleware");
+const errorHandler = require("./middleware/errorMiddleware");
 const cookieParser = require("cookie-parser");
 
 const app = express();
